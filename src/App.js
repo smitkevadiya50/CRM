@@ -1,24 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Sidebar from './component/Sidebar';
+import EmpDashboard from './component/EmpDashboard';
+import SiteDashboard from './component/SiteDashboard';
+import Dashboard from './component/Dashboard';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="flex h-screen">
+        <div className="w-16">
+          <Sidebar icons={[
+            {
+              icon: '/assets/dashboard.png',
+              to: '/dashboard'
+            },
+            {
+              icon: '/assets/user.png',
+              to: '/emp-dashboard'
+            },
+            {
+              icon: '/assets/site.png',
+              to: '/site-dashboard'
+            }
+          ]} />
+        </div>
+        <div className="flex-grow">
+          <Routes>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/emp-dashboard" element={<EmpDashboard />} />
+            <Route path="/site-dashboard" element={<SiteDashboard />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
 
