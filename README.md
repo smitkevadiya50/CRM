@@ -36,7 +36,14 @@ Front-End
 - **Tailwind CSS**: A utility-first CSS framework for rapid UI development.
 - **Material UI**: A popular React UI framework that provides pre-designed components.
 
-Back-End [View]('https://github.com/smitkevadiya50/CRM-API')
+Back-End [View](https://github.com/smitkevadiya50/CRM-API)
 - **Axios**: A promise-based HTTP client for making API requests.
 - **Node.js**: JavaScript runtime built on Chrome's V8 JavaScript engine, used for backend development.
 - **Express.js**: A minimal and flexible Node.js web application framework.
+- **MongoDB**: A NoSQL database used for storing and managing the application's data.
+
+## ScreenShots
+
+![Dashboard](/images/screenshot1.png)
+![Employee Dashboard](/images/screenshot2.png)
+![Site Dashboard](/images/screenshot3.png)
