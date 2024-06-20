@@ -1,70 +1,42 @@
-# Getting Started with Create React App
+# CRM Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+This Customer Relationship Management (CRM) project is a web application designed to manage customer data, track interactions, and streamline various business processes. It offers a comprehensive set of features to handle customer information, employee assignments, and site management effectively. The CRM system is built using React for the front-end, Tailwind CSS for styling, and Material UI for UI components.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+Dashboard
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Site Dashboard**: View and manage all construction sites, including details such as site name, location, owner information, and assigned employees.
+- **Employee Dashboard**: Overview of all employees categorized by their roles (supervisors, managers, workers, helpers) with detailed information and easy management.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Employee Management
+- **Categorized Employees**: Employees are categorized into supervisors, managers, workers, and helpers, allowing for easy management and assignment.
+- **Add/Update Employees**: Add new employees or update existing employee details through intuitive forms.
+- **Search and Select**: Use search-enabled dropdowns to quickly find and select employees when assigning roles.
 
-### `npm test`
+## Site Management
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Site Information**: Manage detailed information about each site including name, location, owner, assigned employees, joining and ending dates, and site logo.
+- **Add/Update Sites**: Easily add new sites or update existing site details through a user-friendly form.
+Assign Employees: Assign supervisors, managers, workers, and helpers to sites with search-enabled selection fields.
+Real-Time Data
+- **API Integration**: The application integrates with backend APIs to fetch and update data in real-time, ensuring the latest information is always available.
+- **Loader for Data Fetching**: Displays a loader while fetching data from the server, ensuring users are aware of ongoing processes.
 
-### `npm run build`
+## Responsive Design
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Responsive Layout**: The application is designed to be fully responsive, ensuring a seamless experience across various devices and screen sizes.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Technologies Used
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Front-End
+- **React**: A JavaScript library for building user interfaces.
+- **Tailwind CSS**: A utility-first CSS framework for rapid UI development.
+- **Material UI**: A popular React UI framework that provides pre-designed components.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Back-End [View]('https://github.com/smitkevadiya50/CRM-API')
+- **Axios**: A promise-based HTTP client for making API requests.
+- **Node.js**: JavaScript runtime built on Chrome's V8 JavaScript engine, used for backend development.
+- **Express.js**: A minimal and flexible Node.js web application framework.
