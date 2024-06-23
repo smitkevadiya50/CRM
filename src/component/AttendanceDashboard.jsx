@@ -47,11 +47,10 @@ const AttendanceDashboard = () => {
         if (siteData.length > 0) {
           const initialSite = siteData[0];
           setSelectedSite(initialSite.value);
-          const initialDate = new Date().toISOString().split('T')[0];
+          const initialDate = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
           setSelectedDate(initialDate);
-
           // Fetch attendance data for initial site and date
-          const attendanceResponse = await axios.get('http://127.0.0.1:3001/attendance', {
+          const attendanceResponse = await axios.get('http://127.0.0.1:3001/attendance',{
             params: {
               site_id: initialSite.value,
               date: initialDate,
@@ -175,11 +174,11 @@ const ListCard = ({ employeeName, employeeCategory, startTime, endTime, employee
             </h1>
             <span>:</span>
             <h1 className="w-10 h-10 border rounded text-center text-gray-400 text-lg flex items-center justify-center">
-              {endTime ? endTime.split(':')[1] : '--'}
+              {endTime  ? endTime.split(':')[1] : '--'}
             </h1>
             <span>:</span>
             <h1 className="w-10 h-10 border rounded text-center text-gray-400 text-lg flex items-center justify-center">
-              {endTime ? endTime.split(':')[2] : '--'}
+              {endTime  ? endTime.split(':')[2] : '--'}
             </h1>
           </div>
         </div>
@@ -189,11 +188,15 @@ const ListCard = ({ employeeName, employeeCategory, startTime, endTime, employee
 };
 
 function convertTo12Hour(time24) {
-  const [hours, minutes] = time24.split(':');
-  const hoursInt = parseInt(hours);
-  const suffix = hoursInt >= 12 ? 'PM' : 'AM';
-  const hours12 = hoursInt % 12 || 12; // Convert '0' to '12' for midnight
-  return `${String(hours12).padStart(2, '0')}:${minutes}:${suffix}`;
+  if(time24){
+    const [hours, minutes] = time24.split(':');
+    const hoursInt = parseInt(hours);
+    const suffix = hoursInt >= 12 ? 'PM' : 'AM';
+    const hours12 = hoursInt % 12 || 12; // Convert '0' to '12' for midnight
+    return `${String(hours12).padStart(2, '0')}:${minutes}:${suffix}`;
+  }else{
+    return '';
+  }
 }
 
 export default AttendanceDashboard;
