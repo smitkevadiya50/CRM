@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { format, addMonths, subMonths, addDays, startOfWeek, endOfWeek, isSameDay, getMonth } from 'date-fns';
+import { format, addMonths, subMonths, addDays, startOfWeek, isSameDay, getMonth } from 'date-fns';
 import LoadingComp from './loading'
+import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [isCalendarExpanded, setIsCalendarExpanded] = useState(false);
   const [sites, setSites] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [employees, setEmployees] = useState([]);
 
@@ -18,12 +17,10 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [siteRes, categoryRes, employeeRes] = await Promise.all([
+        const [siteRes, employeeRes] = await Promise.all([
           axios.get('http://127.0.0.1:3001/site'),
-          axios.get('http://127.0.0.1:3001/category'),
           axios.get('http://127.0.0.1:3001/employee'),
         ]);
-        setCategories(categoryRes.data);
         setSites(siteRes.data);
         setEmployees(employeeRes.data);
 
@@ -37,17 +34,6 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  const handleExpandCalendar = () => {
-    setIsCalendarExpanded(!isCalendarExpanded);
-  };
-
-  const nextMonth = () => {
-    setCurrentMonth(addMonths(currentMonth, 1));
-  };
-
-  const prevMonth = () => {
-    setCurrentMonth(subMonths(currentMonth, 1));
-  };
 
   const nextDate = () => {
     const nextDay = addDays(selectedDate, 1);
@@ -63,55 +49,6 @@ const Dashboard = () => {
       setCurrentMonth(subMonths(currentMonth, 1));
     }
     setSelectedDate(prevDay);
-  };
-
-  const renderDays = () => {
-    const days = [];
-    const date = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-    for (let i = 0; i < 7; i++) {
-      days.push(
-        <div key={i} className="text-center font-medium">
-          {date[i]}
-        </div>
-      );
-    }
-
-    return <div className="grid grid-cols-7">{days}</div>;
-  };
-
-  const renderCells = () => {
-    const monthStart = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
-    const monthEnd = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
-    const startDate = startOfWeek(monthStart);
-    const endDate = endOfWeek(monthEnd);
-
-    const rows = [];
-    let days = [];
-    let day = startDate;
-
-    while (day <= endDate) {
-      for (let i = 0; i < 7; i++) {
-        const cloneDay = day;
-        days.push(
-          <div
-            key={day}
-            className={`text-center p-2 rounded-lg ${isSameDay(day, selectedDate) ? 'bg-blue-500 text-white' : ''}`}
-            onClick={() => setSelectedDate(cloneDay)}
-          >
-            {format(day, 'd')}
-          </div>
-        );
-        day = addDays(day, 1);
-      }
-      rows.push(
-        <div className="grid grid-cols-7" key={day}>
-          {days}
-        </div>
-      );
-      days = [];
-    }
-    return <div>{rows}</div>;
   };
 
   const renderWeekView = () => {
@@ -135,6 +72,23 @@ const Dashboard = () => {
     return <div className="grid grid-cols-7">{days}</div>;
   };
 
+  
+  const renderDays = () => {
+    const days = [];
+    const date = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    for (let i = 0; i < 7; i++) {
+      days.push(
+        <div key={i} className="text-center font-medium">
+          {date[i]}
+        </div>
+      );
+    }
+
+    return <div className="grid grid-cols-7">{days}</div>;
+  };
+
+
   if (loading) {
     return <LoadingComp />;
   }
@@ -148,10 +102,12 @@ const Dashboard = () => {
         <div className="lg:col-span-2">
           <div className="bg-white p-4 rounded shadow">
             <div className="flex justify-between items-center mb-4">
-              <div className="text-lg font-semibold">Calendar</div>
-              <button className="text-blue-500" onClick={handleExpandCalendar}>
-                More
-              </button>
+              <div className="text-lg font-semibold">Calandar</div>
+              <Link to="/calendar-dashboard">
+                <button className="text-blue-500">
+                  More
+                </button>
+              </Link>
             </div>
             <div className="flex items-center justify-center mb-2">
                 <div className="text-lg font-semibold">
@@ -159,24 +115,17 @@ const Dashboard = () => {
                 </div>
             </div>
             <div className='flex'>
-                    <div onClick={isCalendarExpanded ? prevMonth : prevDate} className="p-2">
+                    <div onClick={ prevDate} className="p-2">
                         <ArrowBackIosIcon/>
                     </div>
                         {   
-                        isCalendarExpanded ? (
-                            <div className='w-full'>
-                              {renderDays()}
-                              {renderCells()}
-                            </div>
-                          ):                 
-                        (
                         <div className='w-full'>
                         {renderDays()}
                         {renderWeekView()}
                         </div> 
-                        )
+
                     }      
-                    <div onClick={isCalendarExpanded ? nextMonth : nextDate} className="p-2">
+                    <div onClick={nextDate} className="p-2">
                         <ArrowForwardIosIcon />
                     </div>             
             </div>
@@ -238,18 +187,9 @@ const Dashboard = () => {
           <div className="bg-white p-6 rounded shadow">
             <div className="flex justify-between items-center">
               <div className="text-lg font-semibold">Quick Reminder</div>
-              <button className="text-blue-500">More</button>
-            </div>
-            <div className="mt-2 space-y-4">
-              <div className="p-2 rounded" style={{borderWidth: 1}}>Stock</div>
-              <div className="p-2 rounded" style={{borderWidth: 1}}>Salary</div>
-              <div className="p-2 rounded" style={{borderWidth: 1}}>Training time</div>
-            </div>
-          </div>
-          <div className="bg-white p-6 rounded shadow">
-            <div className="flex justify-between items-center">
-              <div className="text-lg font-semibold">Inventory</div>
-              <button className="text-blue-500">More</button>
+              <Link to="/calendar-dashboard">
+                <button className="text-blue-500">More</button>
+              </Link>
             </div>
             <div className="mt-2 space-y-4">
               <div className="p-2 rounded" style={{borderWidth: 1}}>Stock</div>

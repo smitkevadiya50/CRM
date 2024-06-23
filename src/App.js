@@ -5,6 +5,7 @@ import EmpDashboard from './component/EmpDashboard';
 import SiteDashboard from './component/SiteDashboard';
 import Dashboard from './component/Dashboard';
 import AttendanceDashboard from './component/AttendanceDashboard';
+import CalendarDashboard from './component/CalendarDashboard';
 
 function App() {
   return (
@@ -24,7 +25,6 @@ function App() {
               icon: '/assets/site.png',
               to: '/site-dashboard'
             },
-            ,
             {
               icon: '/assets/attendance.png',
               to: '/attendance-dashboard'
@@ -37,6 +37,7 @@ function App() {
             <Route path="/emp-dashboard" element={<EmpDashboard />} />
             <Route path="/site-dashboard" element={<SiteDashboard />} />
             <Route path="/attendance-dashboard" element={<AttendanceDashboard />} />
+            <Route path="/calendar-dashboard" element={<CalendarDashboard />} />
           </Routes>
         </div>
       </div>
