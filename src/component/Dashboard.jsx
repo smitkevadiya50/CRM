@@ -1,12 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { format, addMonths, subMonths, addDays, startOfWeek, endOfWeek, isSameDay, getMonth } from 'date-fns';
+import LoadingComp from './loading'
 
 const Dashboard = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isCalendarExpanded, setIsCalendarExpanded] = useState(false);
+  const [sites, setSites] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [employees, setEmployees] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [siteRes, categoryRes, employeeRes] = await Promise.all([
+          axios.get('http://127.0.0.1:3001/site'),
+          axios.get('http://127.0.0.1:3001/category'),
+          axios.get('http://127.0.0.1:3001/employee'),
+        ]);
+        setCategories(categoryRes.data);
+        setSites(siteRes.data);
+        setEmployees(employeeRes.data);
+
+      } catch (error) {
+        console.error("Error fetching data", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleExpandCalendar = () => {
     setIsCalendarExpanded(!isCalendarExpanded);
@@ -106,6 +135,10 @@ const Dashboard = () => {
     return <div className="grid grid-cols-7">{days}</div>;
   };
 
+  if (loading) {
+    return <LoadingComp />;
+  }
+
   return (
     <div className="h-full mx-8">
       <div className="mb-4 mt-4 p-4 rounded bg-white w-full text-lg font-semibold">
@@ -149,47 +182,56 @@ const Dashboard = () => {
             </div>
            
           </div>
-          <div className="mt-4">
-            <div className="bg-white p-4 rounded shadow">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center">
-                  <span className="text-white">S</span>
-                </div>
-                <div className="ml-4">
-                  <div className="text-lg font-semibold">Site Name</div>
-                  <div className="text-gray-600">Location</div>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <div className="text-gray-600">Supervisor</div>
-                  <div className="font-semibold">Supervisor Name</div>
-                  <div className="text-gray-600">📞 +91 12345 67890</div>
-                </div>
-                <div>
-                  <div className="text-gray-600">Manager</div>
-                  <div className="font-semibold">Manager Name</div>
-                  <div className="text-gray-600">📞 +91 12345 67890</div>
-                </div>
-                <div>
-                  <div className="text-gray-600">No. of worker</div>
-                  <div className="font-semibold">30</div>
-                </div>
-                <div>
-                  <div className="text-gray-600">No. of helper</div>
-                  <div className="font-semibold">05</div>
-                </div>
-                <div>
-                  <div className="text-gray-600">Joining date</div>
-                  <div className="font-semibold">13 Jun, 2024</div>
-                </div>
-                <div>
-                  <div className="text-gray-600">Ending date</div>
-                  <div className="font-semibold">30 Jun, 2026</div>
-                </div>
-              </div>
-            </div>
-            {/* Additional site cards can go here */}
+          <div className="mt-4 bg-white p-4 rounded shadow">
+                    {sites.map((site, index)=> (
+                                  <div className="">
+                                  <div className="flex items-center mb-4">
+                                    <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center">
+                                      <span className="text-white">S</span>
+                                    </div>
+                                    <div className="ml-4">
+                                      <div className="text-lg font-semibold">{site.site_name}</div>
+                                      <div className="text-gray-600">{site.site_location}</div>
+                                    </div>
+                                  </div>
+                                  <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                      <div className="text-gray-600">Supervisor</div>
+                                      <div className="font-semibold">{employees.find(emp => emp._id === site.supervisor).name}</div>
+                                      <div className="text-gray-600">📞 +91{employees.find(emp => emp._id === site.supervisor).number}</div>
+                                    </div>
+                                    <div>
+                                      <div className="text-gray-600">Manager</div>
+                                      <div className="font-semibold">{employees.find(emp => emp._id === site.manager).name}</div>
+                                      <div className="text-gray-600">📞 +91{employees.find(emp => emp._id === site.manager).number}</div>
+                                    </div>
+                                    <div>
+                                      <div className="text-gray-600">No. of worker</div>
+                                      <div className="font-semibold">{site.worker.length}</div>
+                                    </div>
+                                    <div>
+                                      <div className="text-gray-600">No. of helper</div>
+                                      <div className="font-semibold">{site.helper.length}</div>
+                                    </div>
+                                    <div>
+                                      <div className="text-gray-600">Joining date</div>
+                                      <div className="font-semibold">{site.joining_date.split('T')[0]}</div>
+                                    </div>
+                                    <div>
+                                      <div className="text-gray-600">Ending date</div>
+                                      <div className="font-semibold">{site.ending_date.split('T')[0]}</div>
+                                    </div>
+                                    <div>
+                                      <div className="text-gray-600">Starting Time</div>
+                                      <div className="font-semibold">{site.start_time}</div>
+                                    </div>
+                                    <div>
+                                      <div className="text-gray-600">Ending Time</div>
+                                      <div className="font-semibold">{site.end_time}</div>
+                                    </div>
+                                  </div>
+                                </div>
+                    ))}
           </div>
         </div>
         <div className="lg:col-span-1 space-y-6">
