@@ -45,5 +45,7 @@ Back-End [View](https://github.com/smitkevadiya50/CRM-API)
 ## ScreenShots
 
 ![Dashboard](/images/screenshot1.png)
+![Attendance Dashboard](/images/screenshot4.png)
 ![Employee Dashboard](/images/screenshot2.png)
 ![Site Dashboard](/images/screenshot3.png)
+![Calendar Dashboard](/images/screenshot5.png)
