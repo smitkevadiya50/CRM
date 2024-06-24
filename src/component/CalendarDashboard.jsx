@@ -127,7 +127,7 @@ const CalendarDashboard = () => {
     let days = [];
 
     for (let i = 0; i < firstDayOfMonth; i++) {
-      days.push(<td key={`empty-${i}`} className="border p-1 h-40 overflow-auto"></td>);
+      days.push(<td key={`empty-${i}`} className="border p-1 h-32 overflow-auto"></td>);
     }
 
     for (let day = 1; day <= daysInMonth; day++) {
@@ -140,14 +140,14 @@ const CalendarDashboard = () => {
       }
 
       days.push(
-        <td key={day} className="border p-1 h-40 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
-          <div className="flex flex-col h-40 mx-auto overflow-hidden">
-            <div className="top h-5 w-full">
-              <span className="text-gray-500">{day}</span>
+        <td key={day} className="border p-1 h-32 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+          <div className="flex flex-col h-32 mx-auto overflow-hidden">
+            <div className="top w-full">
+              <span className="text-gray-500 text-sm">{day}</span>
             </div>
             <div className="bottom flex-grow py-1 w-full cursor-pointer">
               {dayEvents.map((event, index) => (
-                <div key={index} className="event bg-purple-400 text-white rounded p-1 text-sm mb-1 flex justify-between">
+                <div key={index} className="event bg-purple-400 text-white rounded p-1 text-sm mb-1 flex justify-between items-start">
                   <span className="event-name">{event.title}</span>
                   <span className="time">{event.description}</span>
                 </div>
@@ -164,7 +164,7 @@ const CalendarDashboard = () => {
     weeks.push(<tr key={`week-${weeks.length}`}>{days}</tr>);
 
     return (
-      <div className="container mx-auto mt-10">
+      <div className="container">
         <div className="wrapper bg-white rounded shadow w-full">
           <div className="header flex justify-between border-b p-2">
             <span className="text-lg font-bold">
@@ -190,13 +190,13 @@ const CalendarDashboard = () => {
           <table className="w-full">
             <thead>
               <tr>
-                <th className="p-2 border-r h-10">Sun</th>
-                <th className="p-2 border-r h-10">Mon</th>
-                <th className="p-2 border-r h-10">Tue</th>
-                <th className="p-2 border-r h-10">Wed</th>
-                <th className="p-2 border-r h-10">Thu</th>
-                <th className="p-2 border-r h-10">Fri</th>
-                <th className="p-2 border-r h-10">Sat</th>
+                <th className="p-1 border-r h-2 text-sm">Sun</th>
+                <th className="p-1 border-r h-2 text-sm">Mon</th>
+                <th className="p-1 border-r h-2 text-sm">Tue</th>
+                <th className="p-1 border-r h-2 text-sm">Wed</th>
+                <th className="p-1 border-r h-2 text-sm">Thu</th>
+                <th className="p-1 border-r h-2 text-sm">Fri</th>
+                <th className="p-1 border-r h-2 text-sm">Sat</th>
               </tr>
             </thead>
             <tbody>
@@ -211,6 +211,7 @@ const CalendarDashboard = () => {
   return (
     <div className="w-full bg-white p-4 mx-8 mb-4 mt-4 rounded text-lg font-semibold flex">
       <div>
+        <div className='text-center'>Scheduled Events</div>
         <div className="flex items-center justify-center">
           <div className="max-w-sm w-full shadow-lg">
             <div className="bg-white rounded-t">
@@ -276,6 +277,7 @@ const CalendarDashboard = () => {
         </div>
       </div>
       <div className="w-full">
+        <div className='text-center'>Site Details</div>
         {renderFullCalendar()}
       </div>
     </div>
