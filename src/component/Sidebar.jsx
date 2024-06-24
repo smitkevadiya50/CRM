@@ -6,7 +6,7 @@ const Sidebar = ({icons}) => {
   const [isselected, setIsselected] = useState(0);
 
   return (
-    <div className="h-screen bg-gray-100">
+    <div className="h-screen bg-gray-100 fixed">
       <div className="h-full w-16 bg-white shadow-md flex flex-col items-center p-4">
             {icons.map( (item, index)=> (
               <Link to={item.to} onClick={()=>{
