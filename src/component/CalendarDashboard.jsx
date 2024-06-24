@@ -11,6 +11,17 @@ const CalendarDashboard = () => {
 
   const daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
+  const events = [
+    { date: new Date(2024, 6-1, 16), title: 'Ram Dev Site', description: '20/50' },
+    { date: new Date(2024, 6-1, 17), title: 'Ram Dev Site', description: '20/50' },
+    { date: new Date(2024, 6-1, 18), title: 'Ram Dev Site', description: '20/50' },
+    { date: new Date(2024, 6-1, 19), title: 'Ram Dev Site', description: '20/50' },
+    { date: new Date(2024, 6-1, 22), title: 'Ram Dev Site', description: '20/50' },
+    { date: new Date(2024, 6-1, 20), title: 'Ram Dev Site', description: '20/50' },
+    { date: new Date(2024, 6-1, 21), title: 'Ram Dev Site', description: '20/50' },
+    // Add more events here
+  ];
+
   const handlePreviousMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
   };
@@ -76,8 +87,8 @@ const CalendarDashboard = () => {
         <td key={day} className="">
           <div
             className={`cursor-pointer flex w-full justify-center p-2 ${
-              isToday(day) ? 'bg-indigo-600 text-white rounded-full' : ''
-            } ${isSelectedDate(day) ? 'bg-indigo-200 rounded-full text-white' : ''}`}
+              isToday(day) ? 'bg-indigo-500 text-white rounded-full' : ''
+            } ${isSelectedDate(day) ? 'bg-indigo-200 text-white rounded-full' : ''}`}
             onClick={() => handleDateClick(day)}
           >
             <p className={`text-base ${isToday(day) ? 'font-bold' : 'text-gray-500'}`}>{day}</p>
@@ -93,6 +104,108 @@ const CalendarDashboard = () => {
     calendarDays.push(<tr key={`week-${calendarDays.length}`}>{week}</tr>);
 
     return calendarDays;
+  };
+
+  const renderFullCalendar = () => {
+
+
+    const getEventsForDate = (date) => {
+      return events.filter(
+        (event) =>
+          event.date.getDate() === date.getDate() &&
+          event.date.getMonth() === date.getMonth() &&
+          event.date.getFullYear() === date.getFullYear()
+      );
+    };
+
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const firstDayOfMonth = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    const weeks = [];
+    let days = [];
+
+    for (let i = 0; i < firstDayOfMonth; i++) {
+      days.push(<td key={`empty-${i}`} className="border p-1 h-40 overflow-auto"></td>);
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day);
+      const dayEvents = getEventsForDate(date);
+
+      if (days.length === 7) {
+        weeks.push(<tr key={`week-${weeks.length}`}>{days}</tr>);
+        days = [];
+      }
+
+      days.push(
+        <td key={day} className="border p-1 h-40 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+          <div className="flex flex-col h-40 mx-auto overflow-hidden">
+            <div className="top h-5 w-full">
+              <span className="text-gray-500">{day}</span>
+            </div>
+            <div className="bottom flex-grow py-1 w-full cursor-pointer">
+              {dayEvents.map((event, index) => (
+                <div key={index} className="event bg-purple-400 text-white rounded p-1 text-sm mb-1 flex justify-between">
+                  <span className="event-name">{event.title}</span>
+                  <span className="time">{event.description}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </td>
+      );
+    }
+
+    while (days.length < 7) {
+      days.push(<td key={`empty-end-${days.length}`} className="border p-1 h-40 overflow-auto"></td>);
+    }
+    weeks.push(<tr key={`week-${weeks.length}`}>{days}</tr>);
+
+    return (
+      <div className="container mx-auto mt-10">
+        <div className="wrapper bg-white rounded shadow w-full">
+          <div className="header flex justify-between border-b p-2">
+            <span className="text-lg font-bold">
+              {currentDate.getFullYear()} {months[currentDate.getMonth()]}
+            </span>
+            <div className="buttons">
+              <button className="p-1" onClick={handlePreviousMonth}>
+                <svg width="1em" fill="gray" height="1em" viewBox="0 0 16 16" className="bi bi-arrow-left-circle" fillRule="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path fillRule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                  <path fillRule="evenodd" d="M8.354 11.354a.5.5 0 0 0 0-.708L5.707 8l2.647-2.646a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708 0z"/>
+                  <path fillRule="evenodd" d="M11.5 8a.5.5 0 0 0-.5-.5H6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 .5-.5z"/>
+                </svg>
+              </button>
+              <button className="p-1" onClick={handleNextMonth}>
+                <svg width="1em" fill="gray" height="1em" viewBox="0 0 16 16" className="bi bi-arrow-right-circle" fillRule="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path fillRule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                  <path fillRule="evenodd" d="M7.646 11.354a.5.5 0 0 1 0-.708L10.293 8 7.646 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0z"/>
+                  <path fillRule="evenodd" d="M4.5 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <table className="w-full">
+            <thead>
+              <tr>
+                <th className="p-2 border-r h-10">Sun</th>
+                <th className="p-2 border-r h-10">Mon</th>
+                <th className="p-2 border-r h-10">Tue</th>
+                <th className="p-2 border-r h-10">Wed</th>
+                <th className="p-2 border-r h-10">Thu</th>
+                <th className="p-2 border-r h-10">Fri</th>
+                <th className="p-2 border-r h-10">Sat</th>
+              </tr>
+            </thead>
+            <tbody>
+              {weeks}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -145,17 +258,17 @@ const CalendarDashboard = () => {
               <div className="px-4">
                 <div className="border-b pb-4 border-gray-400 border-dashed">
                   <p className="text-xs font-light leading-3 text-gray-500">9:00 AM</p>
-                  <a tabIndex="0" className="focus:outline-none text-lg font-medium leading-5 text-gray-800 mt-2">Zoom call with design team</a>
-                  <p className="text-sm pt-2 text-gray-600">Discussion on UX sprint and Wireframe review</p>
+                  <a tabIndex="0" className="focus:outline-none text-lg font-medium leading-5 text-gray-800 mt-2">Meeting with Kishor bhai</a>
+                  <p className="text-sm pt-2 text-gray-600">At site location</p>
                 </div>
                 <div className="border-b pb-4 border-gray-400 border-dashed pt-5">
-                  <p className="text-xs font-light leading-3 text-gray-500">10:00 AM</p>
+                  <p className="text-xs font-light leading-3 text-gray-500">12:00 AM</p>
                   <a tabIndex="0" className="focus:outline-none text-lg font-medium leading-5 text-gray-800 mt-2">Orientation session with new hires</a>
                 </div>
                 <div className="border-b pb-4 border-gray-400 border-dashed pt-5">
-                  <p className="text-xs font-light leading-3 text-gray-500">9:00 AM</p>
-                  <a tabIndex="0" className="focus:outline-none text-lg font-medium leading-5 text-gray-800 mt-2">Zoom call with design team</a>
-                  <p className="text-sm pt-2 text-gray-600">Discussion on UX sprint and Wireframe review</p>
+                  <p className="text-xs font-light leading-3 text-gray-500">05:00 PM</p>
+                  <a tabIndex="0" className="focus:outline-none text-lg font-medium leading-5 text-gray-800 mt-2">Zoom call with manager's team</a>
+                  <p className="text-sm pt-2 text-gray-600">discussion about Diwali bonus</p>
                 </div>
               </div>
             </div>
@@ -163,10 +276,10 @@ const CalendarDashboard = () => {
         </div>
       </div>
       <div className="w-full">
-        Full Calendar
+        {renderFullCalendar()}
       </div>
     </div>
   );
-}
+};
 
 export default CalendarDashboard;
