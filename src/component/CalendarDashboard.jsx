@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
+import { useAttendance } from '../context/AttendanceContext';
+import LoadingComp from './loading';
+import { useNavigate } from 'react-router-dom';
 
 const CalendarDashboard = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
+  const navigate = useNavigate();
+
+  const { attendanceData, loading, error } = useAttendance();
 
   const months = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -10,18 +16,6 @@ const CalendarDashboard = () => {
   ];
 
   const daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
-
-  const events = [
-    { date: new Date(2024, 5, 16), title: 'Ram Dev Site 1', description: '20/50' },
-    { date: new Date(2024, 5, 16), title: 'Ram Dev Site 1/2', description: '20/50' },
-    { date: new Date(2024, 5, 17), title: 'Ram Dev Site 2', description: '20/50' },
-    { date: new Date(2024, 5, 18), title: 'Ram Dev Site 3', description: '20/50' },
-    { date: new Date(2024, 5, 19), title: 'Ram Dev Site 4', description: '20/50' },
-    { date: new Date(2024, 5, 22), title: 'Ram Dev Site 5', description: '20/50' },
-    { date: new Date(2024, 5, 20), title: 'Ram Dev Site 6', description: '20/50' },
-    { date: new Date(2024, 5, 21), title: 'Ram Dev Site 7', description: '20/50' },
-    // Add more events here
-  ];
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(null);
   const [dropdownPosition, setDropdownPosition] = useState({});
@@ -124,16 +118,22 @@ const CalendarDashboard = () => {
   const closeDropdownToggle = () => {
     setIsDropdownOpen(null);
   }
-  
+
+  const handleViewDetails = (event) => {
+    navigate('/attendance-dashboard', { state: { site_id: event.site_id, date: event.date } });
+  };
 
   const renderFullCalendar = () => {
     const getEventsForDate = (date) => {
-      return events.filter(
-        (event) =>
-          event.date.getDate() === date.getDate() &&
-          event.date.getMonth() === date.getMonth() &&
-          event.date.getFullYear() === date.getFullYear()
-      );
+      return attendanceData.filter(
+        (event) => {
+        const eventDate = new Date(event.date);
+        return (
+          eventDate.getDate() === date.getDate() &&
+          eventDate.getMonth() === date.getMonth() &&
+          eventDate.getFullYear() === date.getFullYear()
+        );
+      });
     };
 
     const year = currentDate.getFullYear();
@@ -165,12 +165,17 @@ const CalendarDashboard = () => {
                 <div className="bottom flex-grow py-1 w-full cursor-pointer">
                   {dayEvents.map((event, index) => (
                     <div key={index} onClick={(e) => handleDropdownToggle(index, e, event)} className="event bg-purple-400 text-white rounded p-1 text-sm mb-1 flex justify-between items-start">
-                      <span className="event-name">{event.title}</span>
-                      <span className="time">{event.description}</span>
+                      <span className="event-name">{event.site_name}</span>
+                      <span className="time">{`${event.total_worker_arrived + event.total_helper_arrived}/${event.total_worker + event.total_helper}`}</span>
                       {isDropdownOpen && isDropdownOpen.index === index && (
-                        <div style={{ position: 'absolute', top: dropdownPosition.top, left: dropdownPosition.left }} className="mt-2 w-56 h-52 bg-white border border-gray-300 rounded-md shadow-lg">
-                          <h1 className='text-black'>{isDropdownOpen.details.title}</h1>
-                          <p className='text-black'>{isDropdownOpen.details.description}</p>
+                        <div style={{ position: 'absolute', top: dropdownPosition.top, left: dropdownPosition.left }} className="mt-2 w-56 h-52 bg-white border border-gray-300 rounded-md shadow-lg p-2 space-y-20">
+                            <div>
+                            <h1 className='text-black'>Date: <b className='text-gray-400'>{isDropdownOpen.details.date}</b></h1>
+                            <h1 className='text-black'>Site Name: <b className='text-gray-400'>{isDropdownOpen.details.site_name}</b></h1>
+                            <h1 className='text-black'>Worker: <b className='text-gray-400'>{`${isDropdownOpen.details.total_worker_arrived}/${isDropdownOpen.details.total_worker}`}</b></h1>
+                            <h1 className='text-black'>Helper: <b className='text-gray-400'>{`${isDropdownOpen.details.total_helper_arrived}/${isDropdownOpen.details.total_helper}`}</b></h1>
+                            </div>
+                              <div onClick={() => handleViewDetails(isDropdownOpen.details)} className='text-blue-600 text-center'>View In Details</div>
                         </div>
                       )}
                     </div>
@@ -178,13 +183,16 @@ const CalendarDashboard = () => {
                 </div>
               </div>
             </td>
-      );
+      ); 
     }
 
     while (days.length < 7) {
       days.push(<td key={`empty-end-${days.length}`} className="border p-1 h-40 overflow-auto"></td>);
     }
     weeks.push(<tr key={`week-${weeks.length}`}>{days}</tr>);
+
+    if (loading) return <LoadingComp/>;
+    if (error) return <div>Error: {error.message}</div>;
 
     return (
       <div className="container">

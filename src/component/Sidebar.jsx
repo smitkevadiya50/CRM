@@ -1,22 +1,27 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const Sidebar = ({icons}) => {
-
+const Sidebar = ({ icons }) => {
   const [isselected, setIsselected] = useState(0);
+  const navigate = useNavigate();
+
+  const handleNavigation = (index, path) => {
+    setIsselected(index);
+    navigate(path);
+  };
 
   return (
     <div className="h-screen bg-gray-100 fixed">
       <div className="h-full w-16 bg-white shadow-md flex flex-col items-center p-4">
-            {icons.map( (item, index)=> (
-              <Link to={item.to} onClick={()=>{
-                setIsselected(index)
-              }}>
-                   <div className={`flex flex-col space-y-4 border-2 ${isselected === index ? "border-blue-500": "bg-gray-100"} my-4 h-12 w-12 rounded-md items-center justify-center`}>
-                     <img src={item.icon} alt="Dashboard"/>
-                  </div>
-              </Link>
-            ))}
+        {icons.map((item, index) => (
+          <div
+            key={index}
+            className={`flex flex-col space-y-4 border-2 ${isselected === index ? "border-blue-500" : "bg-gray-100"} my-4 h-12 w-12 rounded-md items-center justify-center cursor-pointer`}
+            onClick={() => handleNavigation(index, item.to)}
+          >
+            <img src={item.icon} alt="icon" />
+          </div>
+        ))}
 
         <div className='mt-auto'>
           <button className="bg-gray-100 rounded-md px-4 py-2 flex items-center justify-center">

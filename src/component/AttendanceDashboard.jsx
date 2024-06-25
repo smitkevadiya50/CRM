@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 import LoadingComp from './loading';
 
 const AttendanceDashboard = () => {
@@ -9,6 +10,8 @@ const AttendanceDashboard = () => {
   const [attendanceData, setAttendanceData] = useState([]);
   const [siteOptions, setSiteOptions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { state } = useLocation();
+  const { site_id, date } = state || {};
 
   const customStyles = {
     control: (provided) => ({
@@ -52,8 +55,8 @@ const AttendanceDashboard = () => {
           // Fetch attendance data for initial site and date
           const attendanceResponse = await axios.get('http://127.0.0.1:3001/attendance',{
             params: {
-              site_id: initialSite.value,
-              date: initialDate,
+              site_id: site_id?site_id:initialSite.value,
+              date: date?date:initialDate,
             }
           });
           setAttendanceData(attendanceResponse.data);
