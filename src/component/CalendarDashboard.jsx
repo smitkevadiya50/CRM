@@ -12,15 +12,19 @@ const CalendarDashboard = () => {
   const daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
   const events = [
-    { date: new Date(2024, 6-1, 16), title: 'Ram Dev Site', description: '20/50' },
-    { date: new Date(2024, 6-1, 17), title: 'Ram Dev Site', description: '20/50' },
-    { date: new Date(2024, 6-1, 18), title: 'Ram Dev Site', description: '20/50' },
-    { date: new Date(2024, 6-1, 19), title: 'Ram Dev Site', description: '20/50' },
-    { date: new Date(2024, 6-1, 22), title: 'Ram Dev Site', description: '20/50' },
-    { date: new Date(2024, 6-1, 20), title: 'Ram Dev Site', description: '20/50' },
-    { date: new Date(2024, 6-1, 21), title: 'Ram Dev Site', description: '20/50' },
+    { date: new Date(2024, 5, 16), title: 'Ram Dev Site 1', description: '20/50' },
+    { date: new Date(2024, 5, 16), title: 'Ram Dev Site 1/2', description: '20/50' },
+    { date: new Date(2024, 5, 17), title: 'Ram Dev Site 2', description: '20/50' },
+    { date: new Date(2024, 5, 18), title: 'Ram Dev Site 3', description: '20/50' },
+    { date: new Date(2024, 5, 19), title: 'Ram Dev Site 4', description: '20/50' },
+    { date: new Date(2024, 5, 22), title: 'Ram Dev Site 5', description: '20/50' },
+    { date: new Date(2024, 5, 20), title: 'Ram Dev Site 6', description: '20/50' },
+    { date: new Date(2024, 5, 21), title: 'Ram Dev Site 7', description: '20/50' },
     // Add more events here
   ];
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(null);
+  const [dropdownPosition, setDropdownPosition] = useState({});
 
   const handlePreviousMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
@@ -46,20 +50,20 @@ const CalendarDashboard = () => {
     ));
   };
 
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const today = new Date();
+  const isToday = (day) => {
+    return (
+      day === today.getDate() &&
+      month === today.getMonth() &&
+      year === today.getFullYear()
+    );
+  };
+
   const renderCalendarDays = () => {
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
     const firstDayOfMonth = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-    const today = new Date();
-    const isToday = (day) => {
-      return (
-        day === today.getDate() &&
-        month === today.getMonth() &&
-        year === today.getFullYear()
-      );
-    };
 
     const isSelectedDate = (day) => {
       return (
@@ -106,9 +110,23 @@ const CalendarDashboard = () => {
     return calendarDays;
   };
 
+  const handleDropdownToggle = (eventIndex, event, eventDetails) => {
+    event.stopPropagation();
+    const { clientX, clientY } = event;
+    setDropdownPosition({ top: clientY, left: clientX });
+    if (isDropdownOpen && isDropdownOpen.index === eventIndex) {
+      setIsDropdownOpen(null);
+    } else {
+      setIsDropdownOpen({ index: eventIndex, details: eventDetails });
+    }
+  };
+
+  const closeDropdownToggle = () => {
+    setIsDropdownOpen(null);
+  }
+  
+
   const renderFullCalendar = () => {
-
-
     const getEventsForDate = (date) => {
       return events.filter(
         (event) =>
@@ -138,23 +156,28 @@ const CalendarDashboard = () => {
         weeks.push(<tr key={`week-${weeks.length}`}>{days}</tr>);
         days = [];
       }
-
       days.push(
-        <td key={day} className="border p-1 h-32 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
-          <div className="flex flex-col h-32 mx-auto overflow-hidden">
-            <div className="top w-full">
-              <span className="text-gray-500 text-sm">{day}</span>
-            </div>
-            <div className="bottom flex-grow py-1 w-full cursor-pointer">
-              {dayEvents.map((event, index) => (
-                <div key={index} className="event bg-purple-400 text-white rounded p-1 text-sm mb-1 flex justify-between items-start">
-                  <span className="event-name">{event.title}</span>
-                  <span className="time">{event.description}</span>
+            <td onClick={()=> closeDropdownToggle()} key={day} className={`border p-1 h-32 overflow-auto transition cursor-pointer duration-500 ease ${isToday(day) ? "bg-indigo-200" : ""} hover:bg-gray-300`}>
+              <div className="flex flex-col h-32 mx-auto overflow-hidden">
+                <div className="top w-full">
+                  <span className="text-gray-500 text-sm">{day}</span>
                 </div>
-              ))}
-            </div>
-          </div>
-        </td>
+                <div className="bottom flex-grow py-1 w-full cursor-pointer">
+                  {dayEvents.map((event, index) => (
+                    <div key={index} onClick={(e) => handleDropdownToggle(index, e, event)} className="event bg-purple-400 text-white rounded p-1 text-sm mb-1 flex justify-between items-start">
+                      <span className="event-name">{event.title}</span>
+                      <span className="time">{event.description}</span>
+                      {isDropdownOpen && isDropdownOpen.index === index && (
+                        <div style={{ position: 'absolute', top: dropdownPosition.top, left: dropdownPosition.left }} className="mt-2 w-56 h-52 bg-white border border-gray-300 rounded-md shadow-lg">
+                          <h1 className='text-black'>{isDropdownOpen.details.title}</h1>
+                          <p className='text-black'>{isDropdownOpen.details.description}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </td>
       );
     }
 
