@@ -16,6 +16,8 @@ Employee Management
 - **Add/Update Employees**: Add new employees or update existing employee details through intuitive forms.
 - **Search and Select**: Use search-enabled dropdowns to quickly find and select employees when assigning roles.
 
+Mobile App for the Manager/Supervisor: [View](https://github.com/smitkevadiya50/CRM-Mobile-App)
+
 ## Site Management
 
 - **Site Information**: Manage detailed information about each site including name, location, owner, assigned employees, joining and ending dates, and site logo.
@@ -35,6 +37,7 @@ Front-End
 - **React**: A JavaScript library for building user interfaces.
 - **Tailwind CSS**: A utility-first CSS framework for rapid UI development.
 - **Material UI**: A popular React UI framework that provides pre-designed components.
+- **Flutter**: It can be used to develop cross platform applications from a single codebase for the web, Fuchsia, Android, iOS, Linux, macOS, and Windows.
 
 Back-End [View](https://github.com/smitkevadiya50/CRM-API)
 - **Axios**: A promise-based HTTP client for making API requests.
